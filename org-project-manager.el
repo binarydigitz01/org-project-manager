@@ -23,13 +23,14 @@
 (require 'projectile)
 
 (defvar org-project-manager-known-project-org-nodes "List of Projects with known-nodes")
-(setq org-project-manager-known-project-org-nodes '("yui-dashboard" . "Yui Dashboard"))
+(setq org-project-manager-known-project-org-nodes '())
 
 (defun org-project-manager-get-file-path (node-name) "Get File path from NODE-NAME."
        (car
         (car
          (org-roam-db-query [:SELECT file :FROM nodes :WHERE (= title $s1)] node-name))))
 
+;;;###autoload
 (defun org-project-manager-open-node ()
   "Opens the node associated with current projectile project."
   (interactive)
