@@ -50,5 +50,20 @@
         (add-to-list 'org-project-manager-known-project-org-nodes (list project-name node-name))
         (find-file node-path)))))
 
+(defun org-project-manager-write-to-file ()
+  "Save org-project-manager-known-project-org-nodes to file."
+  (with-temp-buffer
+  (prin1 org-project-manager-known-project-org-nodes (current-buffer))
+  (write-file "/home/binarydigitz01/projects/org-project-manager/data.txt")))
+
+(defun org-project-manager-read-from-file ()
+  (with-temp-buffer
+    (insert-file-contents "/home/binarydigitz01/projects/org-project-manager/data.txt")
+    (setq org-project-manager-known-project-org-nodes (read (current-buffer)))))
+
+(org-project-manager-read-from-file)
+
+(add-hook 'kill-emacs-hook #'org-project-manager-write-to-file)
+
 (provide 'org-project-manager)
 ;;; org-project-manager.el ends here
