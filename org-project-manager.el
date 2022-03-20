@@ -22,8 +22,17 @@
 (require 'org-roam)
 (require 'projectile)
 
-(defvar org-project-manager-known-project-org-nodes "List of Projects with known-nodes")
-(setq org-project-manager-known-project-org-nodes '())
+(defvar org-project-manager-known-project-org-nodes '() "List of Projects with known-nodes.")
+(defvar org-project-manager-save-path (concat user-emacs-directory "org-project-manager") "Path of File which contains save data.")
+
+(when (null (file-exists-p org-project-manager-save-path))
+    (make-directory org-project-manager-save-path))
+
+(when (null (file-exists-p (concat org-project-manager-save-path "/data.txt")))
+  (progn
+    (with-temp-buffer
+      (print '() (current-buffer))
+      (write-file (concat org-project-manager-save-path "/data.txt")))))
 
 (defun org-project-manager-get-file-path (node-name) "Get File path from NODE-NAME."
        (car
@@ -54,11 +63,12 @@
   "Save org-project-manager-known-project-org-nodes to file."
   (with-temp-buffer
   (prin1 org-project-manager-known-project-org-nodes (current-buffer))
-  (write-file "/home/binarydigitz01/projects/org-project-manager/data.txt")))
+  (write-file (concat org-project-manager-save-path "/data.txt"))))
 
 (defun org-project-manager-read-from-file ()
+  "Save org-project-manager-known-project-org-nodes to file."
   (with-temp-buffer
-    (insert-file-contents "/home/binarydigitz01/projects/org-project-manager/data.txt")
+    (insert-file-contents (concat org-project-manager-save-path "/data.txt"))
     (setq org-project-manager-known-project-org-nodes (read (current-buffer)))))
 
 (org-project-manager-read-from-file)
