@@ -1,6 +1,6 @@
 * Introduction
 This plugin was created by me to tackle an issue: Having 1 org roam node per project, and to navigate to it very quickly.
-This plugin uses [[https:github.com/bbatsov/projectile][projectile]] to recognize a project.[[https://github.com/IvanMalison/org-projectile][ Org-projectile]] is similar, but it does not have org roam integration.
+This plugin uses [[https://github.com/bbatsov/projectile][projectile]] to recognize a project.[[https://github.com/IvanMalison/org-projectile][ Org-projectile]] is similar, but it does not have org roam integration.
 
 * Usage
 This plugin introduces 1 command: org-project-manager-open-node.
