@@ -75,5 +75,10 @@
 
 (add-hook 'kill-emacs-hook #'org-project-manager-write-to-file)
 
+(defun org-project-manager-delete ()
+  "Deletes all cache"
+  (interactive)
+  (setq org-project-manager-known-project-org-nodes '()))
+
 (provide 'org-project-manager)
 ;;; org-project-manager.el ends here
