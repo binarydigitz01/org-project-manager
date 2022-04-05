@@ -20,10 +20,14 @@
 ;;; Code:
 
 (require 'org-roam)
-(require 'projectile)
 
 (defvar org-project-manager-known-project-org-nodes '() "List of Projects with known-nodes.")
 (defvar org-project-manager-save-path (concat user-emacs-directory "org-project-manager") "Path of File which contains save data.")
+(defcustom org-project-manager-default-project-library 'projectile "Default project app to use. Possible values are 'project, 'projectile"
+  :type '(symbol)
+  :group org-project-manager)
+
+(require org-project-manager-default-project)
 
 (when (null (file-exists-p org-project-manager-save-path))
     (make-directory org-project-manager-save-path))
@@ -33,6 +37,13 @@
     (with-temp-buffer
       (print '() (current-buffer))
       (write-file (concat org-project-manager-save-path "/data.txt")))))
+
+(defun org-project-manger-get-project-name ()
+  "Get the project name using either projectile or project,
+ depending on org-project-manager-default-project-library."
+  (if (equal org-project-manager-default-project-library 'project)
+      (cdr(project-current))
+    (projectile-project-name)))
 
 (defun org-project-manager-get-file-path (node-name) "Get File path from NODE-NAME."
        (car
@@ -47,7 +58,7 @@
         (project-name)
         (node)
         (node-path))
-    (setq project-name (projectile-project-name))
+    (setq project-name (org-project-manger-get-project-name))
     (setq node-name (car (cdr (assoc project-name org-project-manager-known-project-org-nodes))))
     (setq node-path (org-project-manager-get-file-path node-name))
     (if node-name

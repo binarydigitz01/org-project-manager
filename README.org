@@ -12,5 +12,11 @@ NOTE: The node should be pre existing. First use org-roam-node-find if a node fo
 
 This plugin is still in production stage, so if you find any issues please do report them.
 
+* Project.el support
+If you use project.el instead of projectile, you can set org-project-manager-default-project to 'project.
+#+begin_src emacs-lisp
+  (setq org-project-manager-default-project 'project)
+#+end_src
+
 * Similar Projects
 [[https://github.com/IvanMalison/org-projectile][Org-projectile]]
