@@ -23,11 +23,14 @@
 
 (defvar org-project-manager-known-project-org-nodes '() "List of Projects with known-nodes.")
 (defvar org-project-manager-save-path (concat user-emacs-directory "org-project-manager") "Path of File which contains save data.")
+(defgroup org-project-manager nil "The group for org-project-manager"
+  :group 'emacs)
 (defcustom org-project-manager-default-project-library 'projectile "Default project app to use. Possible values are 'project, 'projectile"
-  :type '(symbol)
-  :group org-project-manager)
-
-(require org-project-manager-default-project)
+  :type 'symbol
+  :options (list 'project 'projectile)
+  :group 'org-project-manager)
+;; (defvar org-project-manager-default-project-library 'projectile "Default project app to use. Possible values are 'project, 'projectile")
+(require org-project-manager-default-project-library)
 
 (when (null (file-exists-p org-project-manager-save-path))
     (make-directory org-project-manager-save-path))
