@@ -9,7 +9,7 @@
 ;; Version: 0.0.1
 ;; Keywords: abbrev bib c calendar comm convenience data docs emulations extensions faces files frames games hardware help hypermedia i18n internal languages lisp local maint mail matching mouse multimedia news outlines processes terminals tex tools unix vc wp
 ;; Homepage: https://github.com/Ice-Cube69/org-project-manager
-;; Package-Requires: ((emacs "24.3"))
+;; Package-Requires: ((emacs "24.3") (org-roam "2.2.2"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
@@ -23,9 +23,9 @@
 
 (defvar org-project-manager-known-project-org-nodes '() "List of Projects with known-nodes.")
 (defvar org-project-manager-save-path (concat user-emacs-directory "org-project-manager") "Path of File which contains save data.")
-(defgroup org-project-manager nil "The group for org-project-manager"
+(defgroup org-project-manager nil "The group for org-project-manager."
   :group 'emacs)
-(defcustom org-project-manager-default-project-library 'projectile "Default project app to use. Possible values are 'project, 'projectile"
+(defcustom org-project-manager-default-project-library 'projectile "Default project app to use.  Possible values are 'project, 'projectile."
   :type 'symbol
   :options (list 'project 'projectile)
   :group 'org-project-manager)
@@ -42,8 +42,7 @@
       (write-file (concat org-project-manager-save-path "/data.txt")))))
 
 (defun org-project-manger-get-project-name ()
-  "Get the project name using either projectile or project,
- depending on org-project-manager-default-project-library."
+  "Get the project name using either projectile or project, depending on org-project-manager-default-project-library."
   (if (equal org-project-manager-default-project-library 'project)
       (cdr(project-current))
     (projectile-project-name)))
@@ -99,7 +98,13 @@
 	(let (node-name)
 		(dolist (element org-project-manager-known-project-org-nodes node-name)
 			 (if (string= (nth 1 (nth 0 element)) (nth 2 project))
-					 (setq value (nth 1 element))))))
+					 (setq node-name (nth 1 element))))
+		(org-roam-node-from-title-or-alias node-name)))
+
+(defun org-roam-capture-current ()
+	"Capture information to org roam node of current project."
+(org-roam-capture-
+ :node (org-project-manager-get-node (project-current))))
 
 (provide 'org-project-manager)
 ;;; org-project-manager.el ends here
