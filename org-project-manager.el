@@ -90,9 +90,18 @@
 (add-hook 'kill-emacs-hook #'org-project-manager-write-to-file)
 
 (defun org-project-manager-delete ()
-  "Deletes all cache"
+  "Deletes all cache."
   (interactive)
   (setq org-project-manager-known-project-org-nodes '()))
+
+(defun org-project-manager-get-file (project)
+	"Return the org roam file corresponding to the PROJECT."
+	(let (node-name)
+		(dolist (element org-project-manager-known-project-org-nodes node-name)
+			 (if (string= (nth 1 (nth 0 element)) (nth 2 project))
+					 (setq value (nth 1 element))))
+		(if node-name
+				(org-project-manager-get-file-path node-name))))
 
 (provide 'org-project-manager)
 ;;; org-project-manager.el ends here
