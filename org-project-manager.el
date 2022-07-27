@@ -40,45 +40,45 @@
 			(print '() (current-buffer))
 			(write-file (concat org-project-manager-save-path "/data.txt")))))
 
-(defun org-project-manger-get-project-name ()
-	"Get the project name using either projectile or project, depending on org-project-manager-default-project-library."
+(defun org-project-manager-get-project-name ()
+	"Get the project name using either projectile or project, depending on \'org-project-manager-default-project-library\'."
 	(if (equal org-project-manager-default-project-library 'project)
-			(cdr(project-current))
+			 (project-root (project-current))
 		(projectile-project-name)))
 
-(defun org-project-manager-get-file-path (node-name) "Get File path from NODE-NAME."
+(defun org-project-manager-get-file-path (node-id) "Get File path from NODE-ID."
 			 (car
 				(car
-				 (org-roam-db-query [:SELECT file :FROM nodes :WHERE (= title $s1)] node-name))))
+				 (org-roam-db-query [:SELECT file :FROM nodes :WHERE (= id $s1)] node-id))))
 
 ;;;###autoload
 (defun org-project-manager-open-node ()
-	"Opens the node associated with current projectile project."
+	"Opens the node associated with current project."
 	(interactive)
-	(let ((node-name)
+	(let ((node-id)
 				(project-name)
 				(node)
 				(node-path))
-		(setq project-name (org-project-manger-get-project-name))
-		(setq node-name (car (cdr (assoc project-name org-project-manager-known-project-org-nodes))))
-		(setq node-path (org-project-manager-get-file-path node-name))
-		(if node-name
+		(setq project-name (org-project-manager-get-project-name))
+		(setq node-id (car (cdr (assoc project-name org-project-manager-known-project-org-nodes))))
+		(setq node-path (org-project-manager-get-file-path node-id))
+		(if node-id
 				(find-file node-path)
 			(progn
 				(setq node (org-roam-node-read))
-				(setq node-name (org-roam-node-title node))
+				(setq node-id (org-roam-node-id node))
 				(setq node-path (org-roam-node-file node))
-				(add-to-list 'org-project-manager-known-project-org-nodes (list project-name node-name))
+				(add-to-list 'org-project-manager-known-project-org-nodes (list project-name node-id))
 				(find-file node-path)))))
 
 (defun org-project-manager-write-to-file ()
-	"Save org-project-manager-known-project-org-nodes to file."
+	"Save \'org-project-manager-default-project-library\' to file."
 	(with-temp-buffer
 		(prin1 org-project-manager-known-project-org-nodes (current-buffer))
 		(write-file (concat org-project-manager-save-path "/data.txt"))))
 
 (defun org-project-manager-read-from-file ()
-	"Save org-project-manager-known-project-org-nodes to file."
+	"Save \'org-project-manager-default-project-library\' to file."
 	(with-temp-buffer
 		(insert-file-contents (concat org-project-manager-save-path "/data.txt"))
 		(setq org-project-manager-known-project-org-nodes (read (current-buffer)))))
@@ -94,11 +94,11 @@
 
 (defun org-project-manager-get-node (project)
 	"Return the org roam file corresponding to the PROJECT."
-	(let (node-name)
-		(dolist (element org-project-manager-known-project-org-nodes node-name)
-			(if (string= (nth 1 (nth 0 element)) (nth 2 project))
-					(setq node-name (nth 1 element))))
-		(org-roam-node-from-title-or-alias node-name)))
+	(let (node-id)
+		(dolist (element org-project-manager-known-project-org-nodes node-id)
+			(if (string= (project-root project) (car element))
+					(setq node-id (nth 1 element))))
+		(org-roam-node-from-id node-id)))
 
 ;;;###autoload
 (defun org-project-manager-capture-current ()
