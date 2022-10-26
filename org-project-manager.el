@@ -31,7 +31,7 @@
 ;;; Commentary:
 ;;
 ;; This module provides `org-project-manager-open-node'.
-`org-project-manager-delete' and `org-project-manager-capture-current', for use.
+;;`org-project-manager-delete' and `org-project-manager-capture-current', for use.
 
 ;;; Code:
 
