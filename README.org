@@ -17,6 +17,9 @@ This plugin is still in production stage, so if you find any issues please do re
 To quickly capture information to the current project org roam node, you can use org-project-manager-capture-current.
 It uses org-roam-capture in the backend, so all org-roam-capture-templates are respected.
 
+** Org Agenda
+If you use org-agenda to view your todos, you can use org-project-manager-open-agenda to view them in agenda.
+
 * Project.el support
 If you use project.el instead of projectile, you can set org-project-manager-default-project to 'project.
 #+begin_src emacs-lisp
