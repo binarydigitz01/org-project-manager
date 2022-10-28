@@ -8,7 +8,7 @@
 ;; Modified: March 06, 2022
 ;; Version: 1.0
 ;; Homepage: https://github.com/Ice-Cube69/org-project-manager
-;; Package-Requires: ((emacs "24.3") (org-roam "2.2.2"))
+;; Package-Requires: ((emacs "28.1") (org-roam "2.2.2"))
 ;;
 
 ;; This program is free software; you can redistribute it and/or modify
