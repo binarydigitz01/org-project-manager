@@ -111,19 +111,25 @@
 	(setq org-project-manager-known-project-org-nodes '()))
 
 (defun org-project-manager-get-node (project)
-	"Return the org roam file corresponding to the PROJECT."
+	"Return the org roam file corresponding to the project-name."
 	(let (node-id)
 		(dolist (element org-project-manager-known-project-org-nodes node-id)
-			(if (string= (project-root project) (car element))
+			(if (string= project (car element))
 					(setq node-id (nth 1 element))))
 		(org-roam-node-from-id node-id)))
-
 ;;;###autoload
 (defun org-project-manager-capture-current ()
 	"Capture information to org roam node of current project."
 	(interactive)
 	(org-roam-capture-
-	 :node (org-project-manager-get-node (project-current))))
+	 :node (org-project-manager-get-node (org-project-manager-get-project-name))))
+
+(defun org-project-manager-open-agenda ()
+  "Open org agenda with project todos for the current project."
+  (interactive)
+  (let ((org-agenda-files (list (org-project-manager-get-file-path (org-roam-node-id (org-project-manager-get-node (org-project-manager-get-project-name)))))))
+    (print org-agenda-files)
+    (org-agenda)))
 
 (provide 'org-project-manager)
 ;;; org-project-manager.el ends here
