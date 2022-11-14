@@ -40,65 +40,65 @@
 (defvar org-project-manager-known-project-org-nodes '() "List of Projects with known-nodes.")
 (defvar org-project-manager-save-path (concat user-emacs-directory "org-project-manager") "Path of File which contains save data.")
 (defgroup org-project-manager nil "The group for org-project-manager."
-	:group 'emacs)
+  :group 'emacs)
 (defcustom org-project-manager-default-project-library 'projectile "Default project app to use.  Possible values are 'project, 'projectile."
-	:type 'symbol
-	:options (list 'project 'projectile)
-	:group 'org-project-manager)
+  :type 'symbol
+  :options (list 'project 'projectile)
+  :group 'org-project-manager)
 ;; (defvar org-project-manager-default-project-library 'projectile "Default project app to use. Possible values are 'project, 'projectile")
 (require org-project-manager-default-project-library)
 
 (when (null (file-exists-p org-project-manager-save-path))
-	(make-directory org-project-manager-save-path))
+  (make-directory org-project-manager-save-path))
 
 (when (null (file-exists-p (concat org-project-manager-save-path "/data.txt")))
-	(progn
-		(with-temp-buffer
-			(print '() (current-buffer))
-			(write-file (concat org-project-manager-save-path "/data.txt")))))
+  (progn
+    (with-temp-buffer
+      (print '() (current-buffer))
+      (write-file (concat org-project-manager-save-path "/data.txt")))))
 
 (defun org-project-manager-get-project-name ()
-	"Get the project name using either projectile or project, depending on \'org-project-manager-default-project-library\'."
-	(if (equal org-project-manager-default-project-library 'project)
-			 (project-root (project-current))
-		(projectile-project-name)))
+  "Get the project name using either projectile or project, depending on \'org-project-manager-default-project-library\'."
+  (if (equal org-project-manager-default-project-library 'project)
+      (project-root (project-current))
+    (projectile-project-name)))
 
 (defun org-project-manager-get-file-path (node-id) "Get File path from NODE-ID."
-			 (car
-				(car
-				 (org-roam-db-query [:SELECT file :FROM nodes :WHERE (= id $s1)] node-id))))
+       (car
+        (car
+         (org-roam-db-query [:SELECT file :FROM nodes :WHERE (= id $s1)] node-id))))
 
 ;;;###autoload
 (defun org-project-manager-open-node ()
-	"Opens the node associated with current project."
-	(interactive)
-	(let ((node-id)
-				(project-name)
-				(node)
-				(node-path))
-		(setq project-name (org-project-manager-get-project-name))
-		(setq node-id (car (cdr (assoc project-name org-project-manager-known-project-org-nodes))))
-		(setq node-path (org-project-manager-get-file-path node-id))
-		(if node-id
-				(find-file node-path)
-			(progn
-				(setq node (org-roam-node-read))
-				(setq node-id (org-roam-node-id node))
-				(setq node-path (org-roam-node-file node))
-				(add-to-list 'org-project-manager-known-project-org-nodes (list project-name node-id))
-				(find-file node-path)))))
+  "Opens the node associated with current project."
+  (interactive)
+  (let ((node-id)
+        (project-name)
+        (node)
+        (node-path))
+    (setq project-name (org-project-manager-get-project-name))
+    (setq node-id (car (cdr (assoc project-name org-project-manager-known-project-org-nodes))))
+    (setq node-path (org-project-manager-get-file-path node-id))
+    (if node-id
+        (find-file node-path)
+      (progn
+        (setq node (org-roam-node-read))
+        (setq node-id (org-roam-node-id node))
+        (setq node-path (org-roam-node-file node))
+        (add-to-list 'org-project-manager-known-project-org-nodes (list project-name node-id))
+        (find-file node-path)))))
 
 (defun org-project-manager-write-to-file ()
-	"Save \'org-project-manager-default-project-library\' to file."
-	(with-temp-buffer
-		(prin1 org-project-manager-known-project-org-nodes (current-buffer))
-		(write-file (concat org-project-manager-save-path "/data.txt"))))
+  "Save \'org-project-manager-default-project-library\' to file."
+  (with-temp-buffer
+    (prin1 org-project-manager-known-project-org-nodes (current-buffer))
+    (write-file (concat org-project-manager-save-path "/data.txt"))))
 
 (defun org-project-manager-read-from-file ()
-	"Save \'org-project-manager-default-project-library\' to file."
-	(with-temp-buffer
-		(insert-file-contents (concat org-project-manager-save-path "/data.txt"))
-		(setq org-project-manager-known-project-org-nodes (read (current-buffer)))))
+  "Save \'org-project-manager-default-project-library\' to file."
+  (with-temp-buffer
+    (insert-file-contents (concat org-project-manager-save-path "/data.txt"))
+    (setq org-project-manager-known-project-org-nodes (read (current-buffer)))))
 
 (org-project-manager-read-from-file)
 
@@ -106,23 +106,23 @@
 
 ;;;###autoload
 (defun org-project-manager-delete ()
-	"Deletes all cache."
-	(interactive)
-	(setq org-project-manager-known-project-org-nodes '()))
+  "Deletes all cache."
+  (interactive)
+  (setq org-project-manager-known-project-org-nodes '()))
 
 (defun org-project-manager-get-node (project)
-	"Return the org roam file corresponding to the project-name."
-	(let (node-id)
-		(dolist (element org-project-manager-known-project-org-nodes node-id)
-			(if (string= project (car element))
-					(setq node-id (nth 1 element))))
-		(org-roam-node-from-id node-id)))
+  "Return the org roam file corresponding to the project-name."
+  (let (node-id)
+    (dolist (element org-project-manager-known-project-org-nodes node-id)
+      (if (string= project (car element))
+          (setq node-id (nth 1 element))))
+    (org-roam-node-from-id node-id)))
 ;;;###autoload
 (defun org-project-manager-capture-current ()
-	"Capture information to org roam node of current project."
-	(interactive)
-	(org-roam-capture-
-	 :node (org-project-manager-get-node (org-project-manager-get-project-name))))
+  "Capture information to org roam node of current project."
+  (interactive)
+  (org-roam-capture-
+   :node (org-project-manager-get-node (org-project-manager-get-project-name))))
 
 (defun org-project-manager-open-agenda ()
   "Open org agenda with project todos for the current project."
