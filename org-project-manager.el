@@ -68,17 +68,6 @@
         (car
          (org-roam-db-query [:SELECT file :FROM nodes :WHERE (= id $s1)] node-id))))
 
-(defun org-project-manager-ask-roam-node ()
-  "Ask for Org roam node from user, create 1 if it does not exist."
-  (let ((node (org-roam-node-read)))
-    (if (org-roam-node-file node)
-        (node)
-      (progn
-        (org-roam-capture-
-         :node node
-         :templates org-roam-capture-templates)
-        node))))
-
 ;;;###autoload
 (defun org-project-manager-open-node ()
   "Opens the node associated with current project."
@@ -93,7 +82,7 @@
     (if node-id
         (find-file node-path)
       (progn
-        (setq node (org-project-manager-ask-roam-node))
+        (setq node (org-roam-node-read))
         (setq node-id (org-roam-node-id node))
         (setq node-path (org-roam-node-file node))
         (add-to-list 'org-project-manager-known-project-org-nodes (list project-name node-id))
